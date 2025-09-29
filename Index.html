@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pile ou Face</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+    }
+
+    .coin {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ddd, #888);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: black;
+      cursor: pointer;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backface-visibility: hidden;
+    }
+
+    .front {
+      background: gold;
+    }
+
+    .back {
+      background: silver;
+      transform: rotateY(180deg);
+    }
+
+    .spin {
+      animation: flip 1s forwards;
+    }
+
+    @keyframes flip {
+      0%   { transform: rotateY(0)   translateY(0); }
+      50%  { transform: rotateY(720deg) translateY(-200px); }
+      100% { transform: rotateY(var(--end-rotation)) translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="coin" id="coin">
+    <div class="face front">Pile</div>
+    <div class="face back">Face</div>
+  </div>
+
+  <script>
+    const coin = document.getElementById('coin');
+
+    coin.addEventListener('click', () => {
+      // Choisir aléatoirement pile (0) ou face (1)
+      const result = Math.random() < 0.5 ? 0 : 1;
+
+      // 0 = Pile (0°), 1 = Face (180°)
+      const endRotation = result === 0 ? 0 : 180;
+
+      coin.style.setProperty('--end-rotation', endRotation + 'deg');
+
+      // Réinitialiser l’animation
+      coin.classList.remove('spin');
+      void coin.offsetWidth; // forcer le reflow
+      coin.classList.add('spin');
+    });
+  </script>
+</body>
+</html>
